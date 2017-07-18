@@ -1,0 +1,93 @@
+(function (window) {
+    function Precacher(meta) {
+        meta.all = [];
+        for (var key in meta) {
+            if (meta.hasOwnProperty(key)&&key!='all') {
+                var list = meta[key];
+                list.forEach(function (item) {
+                    item.type = key;
+                    meta.all.push(item);
+                })
+            }
+        }
+        this.meta = meta;
+    };
+    Precacher.prototype.filter = function (rule) {
+        var result = [];
+        this.meta.all.forEach(function (item) {
+            var needAdd = false;
+            if(typeof rule=='function'){
+                needAdd = needAdd||rule(item)
+            }
+            else if(typeof rule=='object'&&rule!=null&&rule.reg instanceof RegExp&&typeof rule.key=='string'){
+                needAdd = needAdd||rule.reg.test(item[rule.key])
+            }
+            if (needAdd) result.push(item);
+        });
+        return new Resource(result);
+    };
+
+    var loadingMap = {};
+
+    function Loader(type, url, resolve, reject) {
+        this.type = type;
+        this.url = url;
+        this.resolve = resolve;
+        this.reject = reject;
+    }
+
+    Loader.prototype.start = function () {
+        if (!loadingMap[this.url] && /^(js|css|image|font)$/.test(this.type)) {
+            loadingMap[this.url] = this;
+
+            var dom = document.createElement('link');
+            dom.rel = 'preload';
+            dom.href = this.url;
+            dom.onload = this.onload.bind(this);
+            dom.onerror = this.onerror.bind(this);
+            switch (this.type) {
+                case 'js':
+                    dom.as = 'script';
+                    break;
+                case 'css':
+                    dom.as = 'style';
+                    break;
+                case 'image':
+                    dom.as = 'image';
+                    break;
+                case 'font':
+                    var fontType = this.url.match(/\.([a-zA-Z0-9]+)$/)[1];
+                    dom.as = 'font' + fontType;
+                    dom.crossorigin = true
+
+
+            }
+            document.head.appendChild(dom);
+        }
+    };
+    Loader.prototype.stop = function () {
+        loadingMap[this.url] = null;
+    };
+    Loader.prototype.onload = function () {
+        this.stop();
+        (typeof this.resolve == 'function') && this.resolve();
+    };
+    Loader.prototype.onerror = function () {
+        this.stop();
+        (typeof this.reject == 'function') && this.reject();
+    };
+    function Resource(list) {
+        this.list = list;
+    }
+
+    Resource.prototype.load = function () {
+        this.list.forEach(function (item) {
+            if (!item.loaded) {
+                new Loader(item.type, item.url, function () {
+                    item.loaded = true;
+                }).start();
+            }
+        });
+    };
+    window["<%- key %>"] = new Precacher(<%- content %>)
+})(window);
