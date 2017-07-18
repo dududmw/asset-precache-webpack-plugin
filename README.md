@@ -2,17 +2,12 @@
 
 ## Installation
 
----
-
 npm:
 ```
 npm install asset-precache-webpack-plugin --save-dev
-    
 ```
 
 ## Useage
-
----
 
 * webpack config
 ```
@@ -35,14 +30,10 @@ window.__precacher
 
 ## Configuration
 
----
-
 * filename: Relative path to webpack output path. Support hash, chunkhash. e.g. precache.[chunkhash:8].js
 * key: entry of precache module in window. e.g. '__precacher', use window.precacher runtime.
 
 ## Run
-
----
 
 * Get root obj by key which is specified in webpack config
 ```
