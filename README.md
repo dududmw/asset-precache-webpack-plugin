@@ -48,3 +48,7 @@ var resource=precacher.filter({key:'type',reg:/^(image|js)$/})
 resource.load()
 ```
 
+## Note
+
+When use [html-webpack-plugin](https://github.com/jantimon/html-webpack-plugin), make sure asset-precache-webpack-plugin is more advanced in webpack config plugins. 
+
