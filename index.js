@@ -73,7 +73,7 @@ AssetPrecacheWebpackPlugin.prototype.apply = function(compiler) {
     compiler.plugin('compilation', function(compilation) {
         compilation.plugin('html-webpack-plugin-before-html-generation', function(htmlPluginData, callback) {
             setFileNameAndContent();
-            htmlPluginData.assets.js.unshift(fileName);
+            htmlPluginData.assets.js.unshift((compiler.options.output.publicPath||'')+fileName);
             callback(null, htmlPluginData);
         });
     });
