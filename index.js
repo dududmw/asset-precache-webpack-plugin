@@ -62,7 +62,7 @@ AssetPrecacheWebpackPlugin.prototype.apply = function(compiler) {
                     if(classfyRules[ruleKey].test(assetKey)){
                         assets[ruleKey].push({
                             loaded:false,
-                            url:assetKey
+                            url:path.join(compiler.options.output.publicPath||'',assetKey)
                         });
                     }
                 });
