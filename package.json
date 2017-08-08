@@ -1,6 +1,6 @@
 {
   "name": "asset-precache-webpack-plugin",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "manage your assets loading",
   "main": "index.js",
   "scripts": {
