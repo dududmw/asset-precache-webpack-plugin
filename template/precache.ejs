@@ -43,6 +43,7 @@
             var dom = document.createElement('link');
             dom.rel = 'preload';
             dom.href = this.url;
+            dom.charset = 'utf-8';
             dom.onload = this.onload.bind(this);
             dom.onerror = this.onerror.bind(this);
             switch (this.type) {
